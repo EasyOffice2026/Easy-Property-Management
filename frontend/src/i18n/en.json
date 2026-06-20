@@ -32,7 +32,8 @@
     "occupancyRate": "Occupancy Rate",
     "unitsByStatus": "Units by Status",
     "activeContracts": "Active Contracts",
-    "expiringSoon": "Expiring Soon"
+    "expiringSoon": "Expiring Soon",
+    "openWorkOrders": "Open Work Orders"
   },
   "tenants": {
     "add": "Add Tenant",
@@ -91,5 +92,70 @@
     "renew": "Renew",
     "pdf": "PDF",
     "none": "No contracts found."
+  },
+  "maintenance": {
+    "add": "New Work Order",
+    "number": "WO #",
+    "trade": "Trade",
+    "priority": "Priority",
+    "description": "Description",
+    "status": "Status",
+    "unit": "Unit",
+    "building": "Building",
+    "allTrades": "All Trades",
+    "allPriorities": "All Priorities",
+    "allStatuses": "All Statuses",
+    "assign": "Assign",
+    "start": "Start",
+    "complete": "Complete",
+    "cancel": "Cancel",
+    "none": "No work orders found.",
+    "assignedTo": "Assigned To (User ID)",
+    "estimatedCost": "Estimated Cost",
+    "actualCost": "Actual Cost",
+    "notes": "Notes",
+    "save": "Save",
+    "close": "Close",
+    "trades": {
+      "ELECTRICAL": "Electrical",
+      "PLUMBING": "Plumbing",
+      "CARPENTRY": "Carpentry",
+      "MASONRY": "Masonry",
+      "CLEANING": "Cleaning",
+      "OTHER": "Other"
+    },
+    "priorities": {
+      "EMERGENCY": "Emergency",
+      "HIGH": "High",
+      "ROUTINE": "Routine"
+    },
+    "statuses": {
+      "PENDING": "Pending",
+      "ASSIGNED": "Assigned",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "assets": {
+    "add": "New Asset",
+    "name": "Name",
+    "category": "Category",
+    "location": "Location",
+    "purchaseDate": "Purchase Date",
+    "warrantyExpiry": "Warranty Expiry",
+    "nextServiceDate": "Next Service Date",
+    "status": "Status",
+    "notes": "Notes",
+    "none": "No assets found.",
+    "edit": "Edit Asset",
+    "save": "Save",
+    "cancel": "Cancel",
+    "statuses": {
+      "GOOD": "Good",
+      "SERVICE_DUE": "Service Due",
+      "OVERDUE": "Overdue",
+      "OUT_OF_SERVICE": "Out of Service"
+    }
   }
 }

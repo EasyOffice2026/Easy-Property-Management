@@ -1,4 +1,15 @@
-import { PrismaClient, UnitType, UnitStatus, TenantType, RentPeriod, ContractStatus } from '@prisma/client';
+import {
+  PrismaClient,
+  UnitType,
+  UnitStatus,
+  TenantType,
+  RentPeriod,
+  ContractStatus,
+  Trade,
+  Priority,
+  WOStatus,
+  AssetStatus,
+} from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -107,6 +118,84 @@ async function main() {
     where: { id: { in: occupiedUnits.map((u) => u.id) } },
     data: { status: UnitStatus.OCCUPIED },
   });
+
+  const maintenanceUnit = units.find((u) => u.unitNumber === '202')!;
+  const year = new Date().getFullYear();
+  await Promise.all(
+    [
+      {
+        woNumber: `WO-${year}-001`,
+        unitId: maintenanceUnit.id,
+        buildingId: building.id,
+        trade: Trade.PLUMBING,
+        priority: Priority.EMERGENCY,
+        description: 'Leaking pipe under kitchen sink',
+        status: WOStatus.IN_PROGRESS,
+      },
+      {
+        woNumber: `WO-${year}-002`,
+        unitId: units[0].id,
+        buildingId: building.id,
+        trade: Trade.ELECTRICAL,
+        priority: Priority.HIGH,
+        description: 'Power outlet not working in bedroom',
+        status: WOStatus.PENDING,
+      },
+      {
+        woNumber: `WO-${year}-003`,
+        unitId: units[1].id,
+        buildingId: building.id,
+        trade: Trade.CARPENTRY,
+        priority: Priority.ROUTINE,
+        description: 'Wardrobe door hinge replacement',
+        status: WOStatus.ASSIGNED,
+      },
+      {
+        woNumber: `WO-${year}-004`,
+        buildingId: building.id,
+        trade: Trade.CLEANING,
+        priority: Priority.ROUTINE,
+        description: 'Common area deep cleaning',
+        status: WOStatus.COMPLETED,
+        completedAt: new Date(),
+      },
+      {
+        woNumber: `WO-${year}-005`,
+        unitId: units[4].id,
+        buildingId: building.id,
+        trade: Trade.MASONRY,
+        priority: Priority.HIGH,
+        description: 'Crack in balcony wall',
+        status: WOStatus.PENDING,
+      },
+    ].map((data) => prisma.workOrder.create({ data }))
+  );
+
+  await Promise.all([
+    prisma.asset.create({
+      data: {
+        buildingId: building.id,
+        name: 'Main Elevator',
+        category: Trade.OTHER,
+        location: 'Common Area',
+        purchaseDate: new Date('2020-01-15'),
+        warrantyExpiry: new Date('2025-01-15'),
+        nextServiceDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+        status: AssetStatus.GOOD,
+      },
+    }),
+    prisma.asset.create({
+      data: {
+        buildingId: building.id,
+        name: 'Generator',
+        category: Trade.ELECTRICAL,
+        location: 'Common Area',
+        purchaseDate: new Date('2019-06-01'),
+        nextServiceDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+        status: AssetStatus.GOOD,
+      },
+    }),
+  ]);
 
   console.log('Seed complete. Building created:', building.id);
 }

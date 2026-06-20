@@ -16,6 +16,7 @@ export interface DashboardKpis {
   tenantCount: number;
   activeContractCount: number;
   expiringContracts: ExpiringContract[];
+  openWorkOrders: { EMERGENCY: number; HIGH: number; ROUTINE: number };
 }
 
 export async function getDashboardKpis() {

@@ -7,6 +7,8 @@ import { Properties } from './pages/Properties';
 import { Tenants } from './pages/Tenants';
 import { Inquiries } from './pages/Inquiries';
 import { Contracts } from './pages/Contracts';
+import { WorkOrders } from './pages/WorkOrders';
+import { Assets } from './pages/Assets';
 import { Placeholder } from './pages/Placeholder';
 
 export function App() {
@@ -27,8 +29,8 @@ export function App() {
         <Route path="tenants" element={<Tenants />} />
         <Route path="inquiries" element={<Inquiries />} />
         <Route path="contracts" element={<Contracts />} />
-        <Route path="maintenance" element={<Placeholder title="Maintenance" />} />
-        <Route path="assets" element={<Placeholder title="Assets" />} />
+        <Route path="maintenance" element={<WorkOrders />} />
+        <Route path="assets" element={<Assets />} />
         <Route path="accounting" element={<Placeholder title="Accounting" />} />
         <Route path="petty-cash" element={<Placeholder title="Petty Cash" />} />
         <Route path="reports" element={<Placeholder title="Reports" />} />

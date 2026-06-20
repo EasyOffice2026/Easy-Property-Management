@@ -32,7 +32,8 @@
     "occupancyRate": "نسبة الإشغال",
     "unitsByStatus": "الوحدات حسب الحالة",
     "activeContracts": "العقود النشطة",
-    "expiringSoon": "تنتهي قريبًا"
+    "expiringSoon": "تنتهي قريبًا",
+    "openWorkOrders": "أوامر الصيانة المفتوحة"
   },
   "tenants": {
     "add": "إضافة مستأجر",
@@ -91,5 +92,70 @@
     "renew": "تجديد",
     "pdf": "PDF",
     "none": "لا توجد عقود."
+  },
+  "maintenance": {
+    "add": "أمر صيانة جديد",
+    "number": "رقم الأمر",
+    "trade": "التخصص",
+    "priority": "الأولوية",
+    "description": "الوصف",
+    "status": "الحالة",
+    "unit": "الوحدة",
+    "building": "المبنى",
+    "allTrades": "كل التخصصات",
+    "allPriorities": "كل الأولويات",
+    "allStatuses": "كل الحالات",
+    "assign": "تعيين",
+    "start": "بدء",
+    "complete": "إكمال",
+    "cancel": "إلغاء",
+    "none": "لا توجد أوامر صيانة.",
+    "assignedTo": "تعيين إلى (رقم المستخدم)",
+    "estimatedCost": "التكلفة المتوقعة",
+    "actualCost": "التكلفة الفعلية",
+    "notes": "ملاحظات",
+    "save": "حفظ",
+    "close": "إغلاق",
+    "trades": {
+      "ELECTRICAL": "كهرباء",
+      "PLUMBING": "سباكة",
+      "CARPENTRY": "نجارة",
+      "MASONRY": "بناء",
+      "CLEANING": "تنظيف",
+      "OTHER": "أخرى"
+    },
+    "priorities": {
+      "EMERGENCY": "طارئ",
+      "HIGH": "مرتفع",
+      "ROUTINE": "روتيني"
+    },
+    "statuses": {
+      "PENDING": "قيد الانتظار",
+      "ASSIGNED": "معيّن",
+      "IN_PROGRESS": "قيد التنفيذ",
+      "COMPLETED": "مكتمل",
+      "CANCELLED": "ملغى"
+    }
+  },
+  "assets": {
+    "add": "أصل جديد",
+    "name": "الاسم",
+    "category": "الفئة",
+    "location": "الموقع",
+    "purchaseDate": "تاريخ الشراء",
+    "warrantyExpiry": "انتهاء الضمان",
+    "nextServiceDate": "تاريخ الصيانة القادمة",
+    "status": "الحالة",
+    "notes": "ملاحظات",
+    "none": "لا توجد أصول.",
+    "edit": "تعديل الأصل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "statuses": {
+      "GOOD": "جيد",
+      "SERVICE_DUE": "بحاجة لصيانة",
+      "OVERDUE": "متأخر",
+      "OUT_OF_SERVICE": "خارج الخدمة"
+    }
   }
 }

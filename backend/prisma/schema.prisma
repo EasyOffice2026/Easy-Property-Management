@@ -45,6 +45,8 @@ model Building {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   units       Unit[]
+  workOrders  WorkOrder[]
+  assets      Asset[]
 }
 
 model Unit {
@@ -59,6 +61,7 @@ model Unit {
   furnished  Boolean    @default(true)
   notes      String?
   contracts  Contract[]
+  workOrders WorkOrder[]
 }
 
 enum UnitType {
@@ -181,6 +184,71 @@ enum ContractStatus {
   EXPIRED
   TERMINATED
   CLEARED
+}
+
+model WorkOrder {
+  id            String     @id @default(uuid())
+  woNumber      String     @unique
+  unitId        String?
+  unit          Unit?      @relation(fields: [unitId], references: [id])
+  buildingId    String
+  building      Building   @relation(fields: [buildingId], references: [id])
+  trade         Trade
+  priority      Priority   @default(ROUTINE)
+  description   String
+  status        WOStatus   @default(PENDING)
+  assignedToId  String?
+  scheduledAt   DateTime?
+  completedAt   DateTime?
+  estimatedCost Decimal?   @db.Decimal(10, 3)
+  actualCost    Decimal?   @db.Decimal(10, 3)
+  notes         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+enum Trade {
+  ELECTRICAL
+  PLUMBING
+  CARPENTRY
+  MASONRY
+  CLEANING
+  OTHER
+}
+
+enum Priority {
+  EMERGENCY
+  HIGH
+  ROUTINE
+}
+
+enum WOStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Asset {
+  id              String      @id @default(uuid())
+  buildingId      String
+  building        Building    @relation(fields: [buildingId], references: [id])
+  name            String
+  category        Trade
+  location        String
+  purchaseDate    DateTime?
+  warrantyExpiry  DateTime?
+  nextServiceDate DateTime?
+  status          AssetStatus @default(GOOD)
+  notes           String?
+}
+
+enum AssetStatus {
+  GOOD
+  SERVICE_DUE
+  OVERDUE
+  OUT_OF_SERVICE
 }
 
 model AuditLog {

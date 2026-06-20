@@ -31,6 +31,20 @@ export function Dashboard() {
 
       {kpis && (
         <div className="mt-6 bg-white rounded-lg shadow p-6">
+          <h2 className="text-sm font-medium text-gray-700 mb-4">{t('dashboard.openWorkOrders')}</h2>
+          <div className="flex gap-6">
+            {(['EMERGENCY', 'HIGH', 'ROUTINE'] as const).map((priority) => (
+              <div key={priority} className="text-center">
+                <div className="text-xl font-semibold text-primary">{kpis.openWorkOrders[priority]}</div>
+                <div className="text-xs text-gray-500">{t(`maintenance.priorities.${priority}`)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {kpis && (
+        <div className="mt-6 bg-white rounded-lg shadow p-6">
           <h2 className="text-sm font-medium text-gray-700 mb-4">{t('dashboard.unitsByStatus')}</h2>
           <div className="flex gap-6">
             {Object.entries(kpis.unitsByStatus).map(([status, count]) => (
