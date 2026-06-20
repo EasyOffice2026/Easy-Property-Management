@@ -8,3 +8,4 @@ frontend/node_modules/
 backend/dist/
 frontend/dist/
 tsconfig.tsbuildinfo
+backend/uploads/

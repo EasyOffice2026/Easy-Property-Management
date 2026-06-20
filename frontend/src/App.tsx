@@ -3,6 +3,8 @@ import { Layout } from './components/layout/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
+import { Properties } from './pages/Properties';
+import { Tenants } from './pages/Tenants';
 import { Placeholder } from './pages/Placeholder';
 
 export function App() {
@@ -19,8 +21,8 @@ export function App() {
       >
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="properties" element={<Placeholder title="Properties" />} />
-        <Route path="tenants" element={<Placeholder title="Tenants" />} />
+        <Route path="properties" element={<Properties />} />
+        <Route path="tenants" element={<Tenants />} />
         <Route path="inquiries" element={<Placeholder title="Inquiries" />} />
         <Route path="contracts" element={<Placeholder title="Contracts" />} />
         <Route path="maintenance" element={<Placeholder title="Maintenance" />} />

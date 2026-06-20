@@ -25,6 +25,39 @@
     "error": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
   },
   "dashboard": {
-    "welcome": "مرحبًا بعودتك"
+    "welcome": "مرحبًا بعودتك",
+    "buildings": "المباني",
+    "units": "الوحدات",
+    "tenants": "المستأجرون",
+    "occupancyRate": "نسبة الإشغال",
+    "unitsByStatus": "الوحدات حسب الحالة"
+  },
+  "tenants": {
+    "add": "إضافة مستأجر",
+    "edit": "تعديل المستأجر",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "allTypes": "كل الأنواع",
+    "allStatuses": "كل الحالات",
+    "individual": "فرد",
+    "company": "شركة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "name": "الاسم",
+    "type": "النوع",
+    "nationality": "الجنسية",
+    "mobile": "الجوال",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "status": "الحالة",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "companyName": "اسم الشركة",
+    "civilId": "البطاقة المدنية",
+    "passportNumber": "رقم الجواز",
+    "emergencyContact": "جهة اتصال للطوارئ",
+    "document": "وثيقة",
+    "documentType": "نوع الوثيقة (مثل civil_id)",
+    "none": "لا يوجد مستأجرون."
   }
 }

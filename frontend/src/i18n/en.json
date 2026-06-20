@@ -25,6 +25,39 @@
     "error": "Invalid email or password"
   },
   "dashboard": {
-    "welcome": "Welcome back"
+    "welcome": "Welcome back",
+    "buildings": "Buildings",
+    "units": "Units",
+    "tenants": "Tenants",
+    "occupancyRate": "Occupancy Rate",
+    "unitsByStatus": "Units by Status"
+  },
+  "tenants": {
+    "add": "Add Tenant",
+    "edit": "Edit Tenant",
+    "save": "Save",
+    "cancel": "Cancel",
+    "allTypes": "All Types",
+    "allStatuses": "All Statuses",
+    "individual": "Individual",
+    "company": "Company",
+    "active": "Active",
+    "inactive": "Inactive",
+    "name": "Name",
+    "type": "Type",
+    "nationality": "Nationality",
+    "mobile": "Mobile",
+    "phone": "Phone",
+    "email": "Email",
+    "status": "Status",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "companyName": "Company Name",
+    "civilId": "Civil ID",
+    "passportNumber": "Passport Number",
+    "emergencyContact": "Emergency Contact",
+    "document": "Document",
+    "documentType": "Document type (e.g. civil_id)",
+    "none": "No tenants found."
   }
 }

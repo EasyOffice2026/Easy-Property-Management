@@ -75,6 +75,39 @@ enum UnitStatus {
   OUT_OF_SERVICE
 }
 
+model Tenant {
+  id               String     @id @default(uuid())
+  tenantType       TenantType
+  firstName        String?
+  lastName         String?
+  companyName      String?
+  nationality      String
+  email            String
+  phone            String?
+  mobile           String
+  civilId          String?
+  passportNumber   String?
+  emergencyContact String?
+  isActive         Boolean    @default(true)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  documents        Document[]
+}
+
+enum TenantType {
+  INDIVIDUAL
+  COMPANY
+}
+
+model Document {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  type       String
+  fileUrl    String
+  uploadedAt DateTime @default(now())
+}
+
 model AuditLog {
   id        String   @id @default(uuid())
   userId    String
