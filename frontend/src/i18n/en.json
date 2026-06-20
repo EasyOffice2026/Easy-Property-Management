@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "Easy Property Management"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "tenants": "Tenants",
+    "inquiries": "Inquiries",
+    "contracts": "Contracts",
+    "maintenance": "Maintenance",
+    "assets": "Assets",
+    "accounting": "Accounting",
+    "pettyCash": "Petty Cash",
+    "reports": "Reports",
+    "users": "Users",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Sign in to your account",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign In",
+    "error": "Invalid email or password"
+  },
+  "dashboard": {
+    "welcome": "Welcome back"
+  }
+}

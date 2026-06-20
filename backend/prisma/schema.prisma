@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         Role       @default(LEASING_AGENT)
+  language     Language   @default(EN)
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  auditLogs    AuditLog[]
+}
+
+enum Role {
+  SUPER_ADMIN
+  PROPERTY_MANAGER
+  LEASING_AGENT
+  MAINTENANCE_SUPERVISOR
+  ACCOUNTANT
+  VIEWER
+}
+
+enum Language {
+  EN
+  AR
+}
+
+model Building {
+  id          String   @id @default(uuid())
+  nameEn      String
+  nameAr      String
+  address     String
+  totalFloors Int
+  facilities  String[]
+  managerId   String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  units       Unit[]
+}
+
+model Unit {
+  id         String     @id @default(uuid())
+  buildingId String
+  building   Building   @relation(fields: [buildingId], references: [id])
+  unitNumber String
+  floor      Int
+  type       UnitType
+  status     UnitStatus @default(AVAILABLE)
+  rentAmount Decimal    @db.Decimal(10, 3)
+  furnished  Boolean    @default(true)
+  notes      String?
+}
+
+enum UnitType {
+  STUDIO
+  ONE_BED
+  TWO_BED
+  THREE_BED
+  PENTHOUSE
+}
+
+enum UnitStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  OUT_OF_SERVICE
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String
+  details   Json?
+  createdAt DateTime @default(now())
+}
