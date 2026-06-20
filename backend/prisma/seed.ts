@@ -1,4 +1,4 @@
-import { PrismaClient, UnitType, UnitStatus, TenantType } from '@prisma/client';
+import { PrismaClient, UnitType, UnitStatus, TenantType, RentPeriod, ContractStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -35,8 +35,8 @@ async function main() {
     },
   });
 
-  await prisma.tenant.createMany({
-    data: [
+  const tenants = await Promise.all(
+    [
       {
         tenantType: TenantType.INDIVIDUAL,
         firstName: 'Ahmed',
@@ -78,7 +78,34 @@ async function main() {
         email: 'contact@bayviewconsulting.com',
         mobile: '+96550005555',
       },
-    ],
+    ].map((data) => prisma.tenant.create({ data }))
+  );
+
+  const units = await prisma.unit.findMany({ where: { buildingId: building.id }, orderBy: { unitNumber: 'asc' } });
+  const occupiedUnits = units.filter((u) => u.unitNumber !== '202' && u.unitNumber !== '301');
+
+  await Promise.all(
+    occupiedUnits.map((unit, index) =>
+      prisma.contract.create({
+        data: {
+          contractNumber: `EPM-${new Date().getFullYear()}-${String(index + 1).padStart(3, '0')}`,
+          tenantId: tenants[index].id,
+          unitId: unit.id,
+          rentPeriod: RentPeriod.MONTHLY,
+          rentAmount: unit.rentAmount,
+          securityDeposit: unit.rentAmount,
+          startDate: new Date(),
+          endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          status: ContractStatus.ACTIVE,
+          signedAt: new Date(),
+        },
+      })
+    )
+  );
+
+  await prisma.unit.updateMany({
+    where: { id: { in: occupiedUnits.map((u) => u.id) } },
+    data: { status: UnitStatus.OCCUPIED },
   });
 
   console.log('Seed complete. Building created:', building.id);

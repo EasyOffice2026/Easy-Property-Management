@@ -25,6 +25,7 @@ export function Dashboard() {
           <KpiCard label={t('dashboard.units')} value={kpis.totalUnits} />
           <KpiCard label={t('dashboard.tenants')} value={kpis.tenantCount} />
           <KpiCard label={t('dashboard.occupancyRate')} value={`${Math.round(kpis.occupancyRate * 100)}%`} />
+          <KpiCard label={t('dashboard.activeContracts')} value={kpis.activeContractCount} />
         </div>
       )}
 
@@ -39,6 +40,34 @@ export function Dashboard() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {kpis && kpis.expiringContracts.length > 0 && (
+        <div className="mt-6 bg-white rounded-lg shadow p-6">
+          <h2 className="text-sm font-medium text-gray-700 mb-4">{t('dashboard.expiringSoon')}</h2>
+          <table className="w-full text-sm">
+            <thead className="text-left text-gray-500">
+              <tr>
+                <th className="py-1">{t('contracts.number')}</th>
+                <th className="py-1">{t('tenants.name')}</th>
+                <th className="py-1">{t('contracts.unit')}</th>
+                <th className="py-1">{t('contracts.endDate')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {kpis.expiringContracts.map((c) => (
+                <tr key={c.id} className="border-t">
+                  <td className="py-1.5">{c.contractNumber}</td>
+                  <td className="py-1.5">
+                    {c.tenant.companyName ?? `${c.tenant.firstName ?? ''} ${c.tenant.lastName ?? ''}`}
+                  </td>
+                  <td className="py-1.5">{c.unit.unitNumber}</td>
+                  <td className="py-1.5">{new Date(c.endDate).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

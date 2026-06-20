@@ -39,3 +39,10 @@ export async function listUnitsByBuilding(buildingId: string) {
   const { data } = await apiClient.get<{ success: boolean; data: Unit[] }>(`/buildings/${buildingId}/units`);
   return data.data;
 }
+
+export async function listAvailableUnits() {
+  const { data } = await apiClient.get<{ success: boolean; data: (Unit & { building: Building })[] }>(
+    '/units/available'
+  );
+  return data.data;
+}

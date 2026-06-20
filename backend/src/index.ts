@@ -5,6 +5,8 @@ import authRoutes from './modules/auth/routes';
 import propertiesRoutes from './modules/properties/routes';
 import usersRoutes from './modules/users/routes';
 import tenantsRoutes from './modules/tenants/routes';
+import inquiriesRoutes from './modules/inquiries/routes';
+import contractsRoutes from './modules/contracts/routes';
 import dashboardRoutes from './modules/dashboard/routes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { UPLOAD_ROOT } from './utils/fileStorage';
@@ -21,6 +23,8 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1', propertiesRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/tenants', tenantsRoutes);
+app.use('/api/v1/inquiries', inquiriesRoutes);
+app.use('/api/v1/contracts', contractsRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
 
 app.use(notFoundHandler);

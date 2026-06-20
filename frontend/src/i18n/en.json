@@ -30,7 +30,9 @@
     "units": "Units",
     "tenants": "Tenants",
     "occupancyRate": "Occupancy Rate",
-    "unitsByStatus": "Units by Status"
+    "unitsByStatus": "Units by Status",
+    "activeContracts": "Active Contracts",
+    "expiringSoon": "Expiring Soon"
   },
   "tenants": {
     "add": "Add Tenant",
@@ -59,5 +61,35 @@
     "document": "Document",
     "documentType": "Document type (e.g. civil_id)",
     "none": "No tenants found."
+  },
+  "inquiries": {
+    "add": "Add Inquiry",
+    "channel": "Channel",
+    "notes": "Notes",
+    "status": {
+      "NEW": "New",
+      "IN_PROGRESS": "In Progress",
+      "QUOTED": "Quoted",
+      "CONVERTED": "Converted",
+      "LOST": "Lost"
+    }
+  },
+  "contracts": {
+    "add": "New Contract",
+    "number": "Contract #",
+    "unit": "Unit",
+    "period": "Period",
+    "rent": "Rent",
+    "deposit": "Deposit",
+    "dates": "Dates",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "allPeriods": "All Periods",
+    "signLock": "Sign & Lock",
+    "clear": "Clear",
+    "terminate": "Terminate",
+    "renew": "Renew",
+    "pdf": "PDF",
+    "none": "No contracts found."
   }
 }

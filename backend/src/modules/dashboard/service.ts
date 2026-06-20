@@ -1,11 +1,25 @@
-import { UnitStatus } from '@prisma/client';
+import { ContractStatus, UnitStatus } from '@prisma/client';
 import { prisma } from '../../config/db';
 
+const EXPIRY_WARNING_DAYS = Number(process.env.EXPIRY_WARNING_DAYS ?? 30);
+
 export async function getDashboardKpis() {
-  const [buildingCount, unitsByStatus, tenantCount] = await Promise.all([
+  const expiringThreshold = new Date(Date.now() + EXPIRY_WARNING_DAYS * 24 * 60 * 60 * 1000);
+
+  const [buildingCount, unitsByStatus, tenantCount, activeContractCount, expiringContracts] = await Promise.all([
     prisma.building.count({ where: { isActive: true } }),
     prisma.unit.groupBy({ by: ['status'], _count: { _all: true } }),
     prisma.tenant.count({ where: { isActive: true } }),
+    prisma.contract.count({ where: { status: ContractStatus.ACTIVE } }),
+    prisma.contract.findMany({
+      where: {
+        status: { in: [ContractStatus.ACTIVE, ContractStatus.EXPIRING] },
+        endDate: { gte: new Date(), lte: expiringThreshold },
+      },
+      include: { tenant: true, unit: true },
+      orderBy: { endDate: 'asc' },
+      take: 10,
+    }),
   ]);
 
   const statusCounts: Record<UnitStatus, number> = {
@@ -27,5 +41,7 @@ export async function getDashboardKpis() {
     unitsByStatus: statusCounts,
     occupancyRate,
     tenantCount,
+    activeContractCount,
+    expiringContracts,
   };
 }

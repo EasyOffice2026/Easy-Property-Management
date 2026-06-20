@@ -58,6 +58,7 @@ model Unit {
   rentAmount Decimal    @db.Decimal(10, 3)
   furnished  Boolean    @default(true)
   notes      String?
+  contracts  Contract[]
 }
 
 enum UnitType {
@@ -92,6 +93,8 @@ model Tenant {
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
   documents        Document[]
+  contracts        Contract[]
+  inquiries        Inquiry[]
 }
 
 enum TenantType {
@@ -106,6 +109,78 @@ model Document {
   type       String
   fileUrl    String
   uploadedAt DateTime @default(now())
+}
+
+model Inquiry {
+  id               String         @id @default(uuid())
+  tenantType       TenantType
+  firstName        String
+  lastName         String?
+  companyName      String?
+  mobile           String
+  email            String?
+  channel          InquiryChannel
+  unitTypeInterest UnitType?
+  rentPeriod       RentPeriod?
+  notes            String?
+  status           InquiryStatus  @default(NEW)
+  assignedToId     String?
+  tenantId         String?
+  tenant           Tenant?        @relation(fields: [tenantId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+enum InquiryChannel {
+  WEBSITE
+  WHATSAPP
+  INSTAGRAM
+  CALL_CENTER
+  WALK_IN
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  QUOTED
+  CONVERTED
+  LOST
+}
+
+enum RentPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+model Contract {
+  id              String         @id @default(uuid())
+  contractNumber  String         @unique
+  tenantId        String
+  tenant          Tenant         @relation(fields: [tenantId], references: [id])
+  unitId          String
+  unit            Unit           @relation(fields: [unitId], references: [id])
+  rentPeriod      RentPeriod
+  rentAmount      Decimal        @db.Decimal(10, 3)
+  securityDeposit Decimal        @default(0) @db.Decimal(10, 3)
+  startDate       DateTime
+  endDate         DateTime
+  status          ContractStatus @default(DRAFT)
+  signedAt        DateTime?
+  clearedAt       DateTime?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  EXPIRING
+  EXPIRED
+  TERMINATED
+  CLEARED
 }
 
 model AuditLog {
