@@ -32,30 +32,37 @@ export function Properties() {
   }, [selectedId]);
 
   const selectedBuilding = buildings.find((b) => b.id === selectedId);
+  const availableCount = units.filter((u) => u.status === 'AVAILABLE').length;
 
   return (
     <div>
       <h1 className="text-2xl font-semibold text-primary mb-4">{t('nav.properties')}</h1>
 
-      <div className="mb-6">
-        <select
-          value={selectedId}
-          onChange={(e) => setSelectedId(e.target.value)}
-          className="border rounded px-3 py-2 w-full max-w-md bg-white"
-        >
-          {buildings.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.nameEn} / {b.nameAr}
-            </option>
-          ))}
-        </select>
+      <div className="flex gap-3 mb-6 overflow-x-auto pb-1">
+        {buildings.map((b) => (
+          <button
+            key={b.id}
+            onClick={() => setSelectedId(b.id)}
+            className={`shrink-0 text-left rounded-lg shadow px-4 py-3 min-w-[180px] border-2 ${
+              b.id === selectedId ? 'border-primary bg-primary/5' : 'border-transparent bg-white'
+            }`}
+          >
+            <div className="font-semibold text-primary text-sm">{b.nameEn}</div>
+            <div className="text-xs text-gray-500 mt-0.5">{b.nameAr}</div>
+          </button>
+        ))}
       </div>
 
       {selectedBuilding && (
-        <p className="text-gray-600 mb-4 text-sm">
-          {selectedBuilding.address} &middot; {selectedBuilding.totalFloors} floors &middot;{' '}
-          {selectedBuilding.facilities.join(', ')}
-        </p>
+        <div className="bg-white rounded-lg shadow p-4 mb-6 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-gray-600 text-sm">
+            {selectedBuilding.address} &middot; {selectedBuilding.totalFloors} floors &middot;{' '}
+            {selectedBuilding.facilities.join(', ')}
+          </p>
+          <span className="text-xs px-2 py-1 rounded border bg-success/10 text-success border-success/30">
+            {availableCount} available
+          </span>
+        </div>
       )}
 
       {loading ? (
@@ -63,7 +70,7 @@ export function Properties() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {units.map((unit) => (
-            <div key={unit.id} className="bg-white rounded-lg shadow p-4">
+            <div key={unit.id} className="bg-white rounded-lg shadow p-4 border-t-2 border-t-primary/20">
               <div className="flex justify-between items-start mb-2">
                 <span className="font-semibold text-primary">Unit {unit.unitNumber}</span>
                 <span
