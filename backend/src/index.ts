@@ -8,6 +8,7 @@ import tenantsRoutes from './modules/tenants/routes';
 import inquiriesRoutes from './modules/inquiries/routes';
 import contractsRoutes from './modules/contracts/routes';
 import maintenanceRoutes from './modules/maintenance/routes';
+import pettyCashRoutes from './modules/pettycash/routes';
 import dashboardRoutes from './modules/dashboard/routes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { UPLOAD_ROOT } from './utils/fileStorage';
@@ -27,6 +28,7 @@ app.use('/api/v1/tenants', tenantsRoutes);
 app.use('/api/v1/inquiries', inquiriesRoutes);
 app.use('/api/v1/contracts', contractsRoutes);
 app.use('/api/v1', maintenanceRoutes);
+app.use('/api/v1/petty-cash', pettyCashRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
 
 app.use(notFoundHandler);

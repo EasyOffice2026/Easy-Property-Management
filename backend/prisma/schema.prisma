@@ -47,6 +47,7 @@ model Building {
   units       Unit[]
   workOrders  WorkOrder[]
   assets      Asset[]
+  pettyCash   PettyCashTransaction[]
 }
 
 model Unit {
@@ -260,4 +261,41 @@ model AuditLog {
   entityId  String
   details   Json?
   createdAt DateTime @default(now())
+}
+
+model PettyCashTransaction {
+  id          String                  @id @default(uuid())
+  buildingId  String?
+  building    Building?               @relation(fields: [buildingId], references: [id])
+  type        PettyCashTransactionType
+  category    PettyCashCategory
+  amount      Decimal                 @db.Decimal(10, 3)
+  description String
+  receiptUrl  String?
+  requestedBy String
+  approvedBy  String?
+  status      PettyCashStatus         @default(PENDING)
+  occurredAt  DateTime                @default(now())
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+}
+
+enum PettyCashTransactionType {
+  REPLENISHMENT
+  EXPENSE
+}
+
+enum PettyCashCategory {
+  MAINTENANCE
+  SUPPLIES
+  UTILITIES
+  TRANSPORT
+  OFFICE
+  OTHER
+}
+
+enum PettyCashStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

@@ -137,6 +137,48 @@
       "CANCELLED": "ملغى"
     }
   },
+  "pettyCash": {
+    "title": "النقدية الصغيرة",
+    "subtitle": "تتبع الصندوق الشهري والمصروفات",
+    "add": "معاملة جديدة",
+    "monthlyLimit": "الحد الشهري",
+    "replenished": "تم التزويد",
+    "spent": "تم الصرف",
+    "remaining": "المتبقي",
+    "type": "النوع",
+    "category": "الفئة",
+    "amount": "المبلغ",
+    "description": "الوصف",
+    "building": "المبنى",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "requestedBy": "طلب من",
+    "allTypes": "كل الأنواع",
+    "allCategories": "كل الفئات",
+    "allStatuses": "كل الحالات",
+    "approve": "قبول",
+    "reject": "رفض",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "none": "لا توجد معاملات.",
+    "types": {
+      "REPLENISHMENT": "تزويد",
+      "EXPENSE": "مصروف"
+    },
+    "categories": {
+      "MAINTENANCE": "صيانة",
+      "SUPPLIES": "مستلزمات",
+      "UTILITIES": "مرافق",
+      "TRANSPORT": "نقل",
+      "OFFICE": "مكتب",
+      "OTHER": "أخرى"
+    },
+    "statuses": {
+      "PENDING": "قيد الانتظار",
+      "APPROVED": "مقبول",
+      "REJECTED": "مرفوض"
+    }
+  },
   "assets": {
     "add": "أصل جديد",
     "name": "الاسم",

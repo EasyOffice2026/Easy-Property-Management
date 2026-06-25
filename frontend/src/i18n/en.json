@@ -137,6 +137,48 @@
       "CANCELLED": "Cancelled"
     }
   },
+  "pettyCash": {
+    "title": "Petty Cash",
+    "subtitle": "Monthly fund tracking & expenses",
+    "add": "New Transaction",
+    "monthlyLimit": "Monthly Limit",
+    "replenished": "Replenished",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "type": "Type",
+    "category": "Category",
+    "amount": "Amount",
+    "description": "Description",
+    "building": "Building",
+    "status": "Status",
+    "date": "Date",
+    "requestedBy": "Requested By",
+    "allTypes": "All Types",
+    "allCategories": "All Categories",
+    "allStatuses": "All Statuses",
+    "approve": "Approve",
+    "reject": "Reject",
+    "save": "Save",
+    "cancel": "Cancel",
+    "none": "No transactions found.",
+    "types": {
+      "REPLENISHMENT": "Replenishment",
+      "EXPENSE": "Expense"
+    },
+    "categories": {
+      "MAINTENANCE": "Maintenance",
+      "SUPPLIES": "Supplies",
+      "UTILITIES": "Utilities",
+      "TRANSPORT": "Transport",
+      "OFFICE": "Office",
+      "OTHER": "Other"
+    },
+    "statuses": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    }
+  },
   "assets": {
     "add": "New Asset",
     "name": "Name",

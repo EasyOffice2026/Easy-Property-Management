@@ -9,6 +9,7 @@ import { Inquiries } from './pages/Inquiries';
 import { Contracts } from './pages/Contracts';
 import { WorkOrders } from './pages/WorkOrders';
 import { Assets } from './pages/Assets';
+import { PettyCash } from './pages/PettyCash';
 import { Placeholder } from './pages/Placeholder';
 
 export function App() {
@@ -32,7 +33,7 @@ export function App() {
         <Route path="maintenance" element={<WorkOrders />} />
         <Route path="assets" element={<Assets />} />
         <Route path="accounting" element={<Placeholder title="Accounting" />} />
-        <Route path="petty-cash" element={<Placeholder title="Petty Cash" />} />
+        <Route path="petty-cash" element={<PettyCash />} />
         <Route path="reports" element={<Placeholder title="Reports" />} />
         <Route path="users" element={<Placeholder title="Users" />} />
         <Route path="settings" element={<Placeholder title="Settings" />} />
