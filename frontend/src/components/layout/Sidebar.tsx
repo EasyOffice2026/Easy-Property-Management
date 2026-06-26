@@ -75,7 +75,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="px-4 py-4 border-t border-white/10">
+      <div className="px-4 py-4 border-t border-white/10 space-y-2">
         <button
           type="button"
           onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
@@ -83,6 +83,7 @@ export function Sidebar() {
         >
           {language === 'en' ? 'العربية' : 'English'}
         </button>
+        <div className="text-center text-[11px] text-white/40">v1.0 · {t('app.name')}</div>
       </div>
     </aside>
   );

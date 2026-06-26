@@ -91,7 +91,6 @@ export function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-sm font-medium text-gray-700 mb-4">Monthly Revenue (KWD)</h2>
           <RevenueChart data={kpis.monthlyRevenue} />
         </div>
 
@@ -175,6 +174,8 @@ export function Dashboard() {
                   <th className="py-1">{t('tenants.name')}</th>
                   <th className="py-1">{t('contracts.unit')}</th>
                   <th className="py-1">{t('contracts.endDate')}</th>
+                  <th className="py-1">{t('contracts.period')}</th>
+                  <th className="py-1"></th>
                 </tr>
               </thead>
               <tbody>
@@ -186,6 +187,12 @@ export function Dashboard() {
                     </td>
                     <td className="py-1.5">{c.unit.unitNumber}</td>
                     <td className="py-1.5">{new Date(c.endDate).toLocaleDateString()}</td>
+                    <td className="py-1.5">{c.rentPeriod}</td>
+                    <td className="py-1.5">
+                      <button className="bg-primary text-white rounded px-3 py-1 text-xs font-medium">
+                        {t('contracts.renew')}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -291,10 +298,6 @@ function UnitsDonut({
 }
 
 function RevenueChart({ data }: { data: { month: string; revenue: number }[] }) {
-  if (data.length === 0) {
-    return <p className="text-sm text-gray-500">-</p>;
-  }
-
   const max = Math.max(...data.map((d) => d.revenue), 1);
   const lastIndex = data.length - 1;
   const yoyDelta =
@@ -304,18 +307,22 @@ function RevenueChart({ data }: { data: { month: string; revenue: number }[] }) 
 
   return (
     <div>
-      {yoyDelta !== null && (
-        <div className="flex justify-end mb-2">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-sm font-medium text-gray-700">Monthly Revenue (KWD)</h2>
+        {yoyDelta !== null && (
           <span
             className={`text-xs px-2 py-0.5 rounded-full font-medium ${
               yoyDelta >= 0 ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger'
             }`}
           >
             {yoyDelta >= 0 ? '+' : ''}
-            {yoyDelta}%
+            {yoyDelta}% YoY
           </span>
-        </div>
-      )}
+        )}
+      </div>
+      {data.length === 0 ? (
+        <p className="text-sm text-gray-500">-</p>
+      ) : (
       <div className="flex items-end gap-3 h-40">
         {data.map((d, i) => (
           <div key={d.month} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
@@ -330,6 +337,7 @@ function RevenueChart({ data }: { data: { month: string; revenue: number }[] }) 
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

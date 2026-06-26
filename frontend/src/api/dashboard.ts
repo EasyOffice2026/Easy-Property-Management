@@ -4,6 +4,7 @@ export interface ExpiringContract {
   id: string;
   contractNumber: string;
   endDate: string;
+  rentPeriod: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
   tenant: { firstName: string | null; lastName: string | null; companyName: string | null };
   unit: { unitNumber: string };
 }

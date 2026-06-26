@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
+import { getDashboardKpis } from '../../api/dashboard';
 
 const TITLE_KEYS: Record<string, string> = {
   '/dashboard': 'nav.dashboard',
@@ -24,6 +25,13 @@ export function Topbar() {
   const location = useLocation();
   const { user, clearAuth } = useAppStore();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [emergencyCount, setEmergencyCount] = useState(0);
+
+  useEffect(() => {
+    getDashboardKpis()
+      .then((kpis) => setEmergencyCount(kpis.openWorkOrders.EMERGENCY))
+      .catch(() => setEmergencyCount(0));
+  }, [location.pathname]);
 
   function handleLogout() {
     clearAuth();
@@ -44,6 +52,11 @@ export function Topbar() {
           className="relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 text-lg"
         >
           🔔
+          {emergencyCount > 0 && (
+            <span className="absolute top-0.5 end-0.5 min-w-[16px] h-4 px-1 rounded-full bg-danger text-white text-[10px] font-semibold flex items-center justify-center">
+              {emergencyCount}
+            </span>
+          )}
         </button>
 
         <div className="relative">
