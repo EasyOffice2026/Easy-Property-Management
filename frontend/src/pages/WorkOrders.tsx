@@ -36,7 +36,6 @@ const STATUS_COLORS: Record<WOStatus, string> = {
 
 const TRADES: Trade[] = ['ELECTRICAL', 'PLUMBING', 'CARPENTRY', 'MASONRY', 'CLEANING', 'OTHER'];
 const PRIORITIES: Priority[] = ['EMERGENCY', 'HIGH', 'ROUTINE'];
-const STATUSES: WOStatus[] = ['PENDING', 'ASSIGNED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
 
 const EMPTY_FORM = {
   buildingId: '',
@@ -51,8 +50,6 @@ export function WorkOrders() {
   const { t } = useTranslation();
   const [items, setItems] = useState<WorkOrder[]>([]);
   const [tradeFilter, setTradeFilter] = useState<Trade | ''>('');
-  const [priorityFilter, setPriorityFilter] = useState<Priority | ''>('');
-  const [statusFilter, setStatusFilter] = useState<WOStatus | ''>('');
   const [modalOpen, setModalOpen] = useState(false);
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
@@ -63,8 +60,6 @@ export function WorkOrders() {
   async function refresh() {
     const result = await listWorkOrders({
       trade: tradeFilter || undefined,
-      priority: priorityFilter || undefined,
-      status: statusFilter || undefined,
       pageSize: 100,
     });
     setItems(result.items);
@@ -72,7 +67,17 @@ export function WorkOrders() {
 
   useEffect(() => {
     refresh();
-  }, [tradeFilter, priorityFilter, statusFilter]);
+  }, [tradeFilter]);
+
+  const emergencyCount = items.filter((w) => w.priority === 'EMERGENCY' && w.status !== 'COMPLETED' && w.status !== 'CANCELLED').length;
+  const highCount = items.filter((w) => w.priority === 'HIGH' && w.status !== 'COMPLETED' && w.status !== 'CANCELLED').length;
+  const routineCount = items.filter((w) => w.priority === 'ROUTINE' && w.status !== 'COMPLETED' && w.status !== 'CANCELLED').length;
+  const completedThisMonth = items.filter((w) => {
+    if (w.status !== 'COMPLETED') return false;
+    const updated = new Date(w.updatedAt ?? w.createdAt ?? '');
+    const now = new Date();
+    return updated.getMonth() === now.getMonth() && updated.getFullYear() === now.getFullYear();
+  }).length;
 
   async function openModal() {
     setForm(EMPTY_FORM);
@@ -126,132 +131,107 @@ export function WorkOrders() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold text-primary">{t('nav.maintenance')}</h1>
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-primary">{t('nav.maintenance')}</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Maintenance requests and assignments</p>
+        </div>
         <button onClick={openModal} className="bg-primary text-white rounded px-4 py-2 text-sm font-medium">
-          {t('maintenance.add')}
+          + {t('maintenance.add')}
         </button>
       </div>
 
       {error && <p className="text-danger text-sm mb-3">{error}</p>}
 
-      <div className="flex gap-3 mb-4">
-        <select
-          value={tradeFilter}
-          onChange={(e) => setTradeFilter(e.target.value as Trade | '')}
-          className="border rounded px-3 py-2 bg-white text-sm"
-        >
-          <option value="">{t('maintenance.allTrades')}</option>
-          {TRADES.map((tr) => (
-            <option key={tr} value={tr}>
-              {t(`maintenance.trades.${tr}`)}
-            </option>
-          ))}
-        </select>
-        <select
-          value={priorityFilter}
-          onChange={(e) => setPriorityFilter(e.target.value as Priority | '')}
-          className="border rounded px-3 py-2 bg-white text-sm"
-        >
-          <option value="">{t('maintenance.allPriorities')}</option>
-          {PRIORITIES.map((p) => (
-            <option key={p} value={p}>
-              {t(`maintenance.priorities.${p}`)}
-            </option>
-          ))}
-        </select>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as WOStatus | '')}
-          className="border rounded px-3 py-2 bg-white text-sm"
-        >
-          <option value="">{t('maintenance.allStatuses')}</option>
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {t(`maintenance.statuses.${s}`)}
-            </option>
-          ))}
-        </select>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+        <MiniStat value={emergencyCount} label={t('maintenance.priorities.EMERGENCY')} color="text-danger" dot="bg-danger" />
+        <MiniStat value={highCount} label={t('maintenance.priorities.HIGH')} color="text-warning" dot="bg-warning" />
+        <MiniStat value={routineCount} label={t('maintenance.priorities.ROUTINE')} color="text-info" dot="bg-info" />
+        <MiniStat value={completedThisMonth} label="Completed This Month" color="text-success" dot="bg-success" />
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600 text-left">
-            <tr>
-              <th className="px-4 py-3">{t('maintenance.number')}</th>
-              <th className="px-4 py-3">{t('maintenance.trade')}</th>
-              <th className="px-4 py-3">{t('maintenance.priority')}</th>
-              <th className="px-4 py-3">{t('maintenance.description')}</th>
-              <th className="px-4 py-3">{t('maintenance.unit')}</th>
-              <th className="px-4 py-3">{t('maintenance.status')}</th>
-              <th className="px-4 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((wo) => (
-              <tr key={wo.id} className="border-t">
-                <td className="px-4 py-3 font-medium">{wo.woNumber}</td>
-                <td className="px-4 py-3">
-                  <span className="mr-1">{TRADE_ICONS[wo.trade]}</span>
-                  {t(`maintenance.trades.${wo.trade}`)}
-                </td>
-                <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded border ${PRIORITY_COLORS[wo.priority]}`}>
-                    {t(`maintenance.priorities.${wo.priority}`)}
-                  </span>
-                </td>
-                <td className="px-4 py-3 max-w-xs truncate">{wo.description}</td>
-                <td className="px-4 py-3">{wo.unit?.unitNumber ?? '-'}</td>
-                <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded border ${STATUS_COLORS[wo.status]}`}>
-                    {t(`maintenance.statuses.${wo.status}`)}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-right whitespace-nowrap space-x-2">
-                  {wo.status === 'PENDING' && (
-                    <button
-                      onClick={() => handleStatusChange(wo, 'ASSIGNED')}
-                      className="text-xs font-medium text-primary"
-                    >
-                      {t('maintenance.assign')}
-                    </button>
-                  )}
-                  {wo.status === 'ASSIGNED' && (
-                    <button
-                      onClick={() => handleStatusChange(wo, 'IN_PROGRESS')}
-                      className="text-xs font-medium text-primary"
-                    >
-                      {t('maintenance.start')}
-                    </button>
-                  )}
-                  {(wo.status === 'ASSIGNED' || wo.status === 'IN_PROGRESS') && (
-                    <button
-                      onClick={() => handleStatusChange(wo, 'COMPLETED')}
-                      className="text-xs font-medium text-success"
-                    >
-                      {t('maintenance.complete')}
-                    </button>
-                  )}
-                  {wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED' && (
-                    <button
-                      onClick={() => handleStatusChange(wo, 'CANCELLED')}
-                      className="text-xs font-medium text-danger"
-                    >
-                      {t('maintenance.cancel')}
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {items.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
-                  {t('maintenance.none')}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="bg-white rounded-lg shadow p-3 mb-4 flex gap-2 overflow-x-auto">
+        <button
+          onClick={() => setTradeFilter('')}
+          className={`shrink-0 rounded px-4 py-2 text-sm font-medium ${
+            tradeFilter === '' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          {t('maintenance.allTrades')}
+        </button>
+        {TRADES.map((tr) => (
+          <button
+            key={tr}
+            onClick={() => setTradeFilter(tr)}
+            className={`shrink-0 rounded px-4 py-2 text-sm font-medium ${
+              tradeFilter === tr ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {TRADE_ICONS[tr]} {t(`maintenance.trades.${tr}`)}
+          </button>
+        ))}
+      </div>
+
+      <div className="bg-white rounded-lg shadow divide-y">
+        {items.map((wo) => (
+          <div key={wo.id} className="flex items-center gap-4 px-4 py-3">
+            <span className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${PRIORITY_COLORS[wo.priority]}`}>
+              {TRADE_ICONS[wo.trade]}
+            </span>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium text-gray-800 truncate">
+                {wo.woNumber} — {wo.description}
+              </div>
+              <div className="text-xs text-gray-500 mt-0.5 flex items-center gap-2 flex-wrap">
+                <span>{wo.unit?.unitNumber ?? '-'}</span>
+                <span className={`text-xs px-1.5 py-0.5 rounded border ${PRIORITY_COLORS[wo.priority]}`}>
+                  {t(`maintenance.priorities.${wo.priority}`)}
+                </span>
+                <span>Reported {new Date(wo.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
+            <span className={`text-xs px-2 py-0.5 rounded border shrink-0 ${STATUS_COLORS[wo.status]}`}>
+              {t(`maintenance.statuses.${wo.status}`)}
+            </span>
+            <div className="flex gap-2 shrink-0">
+              {wo.status === 'PENDING' && (
+                <button
+                  onClick={() => handleStatusChange(wo, 'ASSIGNED')}
+                  className="text-xs font-medium text-primary"
+                >
+                  {t('maintenance.assign')}
+                </button>
+              )}
+              {wo.status === 'ASSIGNED' && (
+                <button
+                  onClick={() => handleStatusChange(wo, 'IN_PROGRESS')}
+                  className="text-xs font-medium text-primary"
+                >
+                  {t('maintenance.start')}
+                </button>
+              )}
+              {(wo.status === 'ASSIGNED' || wo.status === 'IN_PROGRESS') && (
+                <button
+                  onClick={() => handleStatusChange(wo, 'COMPLETED')}
+                  className="text-xs font-medium text-success"
+                >
+                  {t('maintenance.complete')}
+                </button>
+              )}
+              {wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED' && (
+                <button
+                  onClick={() => handleStatusChange(wo, 'CANCELLED')}
+                  className="text-xs font-medium text-danger"
+                >
+                  {t('maintenance.cancel')}
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+        {items.length === 0 && (
+          <div className="px-4 py-6 text-center text-gray-500">{t('maintenance.none')}</div>
+        )}
       </div>
 
       {modalOpen && (
@@ -364,6 +344,18 @@ export function WorkOrders() {
           </form>
         </div>
       )}
+    </div>
+  );
+}
+
+function MiniStat({ value, label, color, dot }: { value: number; label: string; color: string; dot: string }) {
+  return (
+    <div className="bg-white rounded-lg shadow p-4">
+      <div className="flex items-center gap-2">
+        <span className={`w-2 h-2 rounded-full ${dot}`} />
+        <span className={`text-2xl font-semibold ${color}`}>{value}</span>
+      </div>
+      <div className="text-xs text-gray-500 mt-1">{label}</div>
     </div>
   );
 }
