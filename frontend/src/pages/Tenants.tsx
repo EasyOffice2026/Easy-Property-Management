@@ -25,14 +25,16 @@ const EMPTY_FORM: Partial<TenantInput> = {
   isActive: true,
 };
 
+type QuickFilter = 'ALL' | 'INDIVIDUAL' | 'COMPANY' | 'ACTIVE' | 'INACTIVE';
+
 export function Tenants() {
   const { t } = useTranslation();
   const [items, setItems] = useState<Tenant[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
-  const [typeFilter, setTypeFilter] = useState<TenantType | ''>('');
-  const [activeFilter, setActiveFilter] = useState<'' | 'true' | 'false'>('');
+  const [quickFilter, setQuickFilter] = useState<QuickFilter>('ALL');
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Tenant | null>(null);
   const [form, setForm] = useState<Partial<TenantInput>>(EMPTY_FORM);
@@ -44,8 +46,8 @@ export function Tenants() {
     const result = await listTenants({
       page,
       pageSize,
-      tenantType: typeFilter || undefined,
-      isActive: activeFilter === '' ? undefined : activeFilter === 'true',
+      tenantType: quickFilter === 'INDIVIDUAL' || quickFilter === 'COMPANY' ? quickFilter : undefined,
+      isActive: quickFilter === 'ACTIVE' ? true : quickFilter === 'INACTIVE' ? false : undefined,
     });
     setItems(result.items);
     setTotal(result.total);
@@ -53,7 +55,15 @@ export function Tenants() {
 
   useEffect(() => {
     refresh();
-  }, [page, typeFilter, activeFilter]);
+  }, [page, quickFilter]);
+
+  const visibleItems = items.filter((tenant) => {
+    if (!search) return true;
+    const name =
+      tenant.tenantType === 'COMPANY' ? tenant.companyName ?? '' : `${tenant.firstName ?? ''} ${tenant.lastName ?? ''}`;
+    const haystack = `${name} ${tenant.email} ${tenant.mobile}`.toLowerCase();
+    return haystack.includes(search.toLowerCase());
+  });
 
   function openAdd() {
     setEditing(null);
@@ -95,78 +105,100 @@ export function Tenants() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-start mb-4 gap-3">
         <h1 className="text-2xl font-semibold text-primary">{t('nav.tenants')}</h1>
-        <button onClick={openAdd} className="bg-primary text-white rounded px-4 py-2 text-sm font-medium">
-          {t('tenants.add')}
-        </button>
+        <div className="flex gap-2">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search tenants..."
+            className="border rounded px-3 py-2 text-sm w-56"
+          />
+          <button onClick={openAdd} className="bg-primary text-white rounded px-4 py-2 text-sm font-medium shrink-0">
+            {t('tenants.add')}
+          </button>
+        </div>
       </div>
 
-      <div className="flex gap-3 mb-4">
-        <select
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value as TenantType | '')}
-          className="border rounded px-3 py-2 bg-white text-sm"
-        >
-          <option value="">{t('tenants.allTypes')}</option>
-          <option value="INDIVIDUAL">{t('tenants.individual')}</option>
-          <option value="COMPANY">{t('tenants.company')}</option>
-        </select>
-        <select
-          value={activeFilter}
-          onChange={(e) => setActiveFilter(e.target.value as '' | 'true' | 'false')}
-          className="border rounded px-3 py-2 bg-white text-sm"
-        >
-          <option value="">{t('tenants.allStatuses')}</option>
-          <option value="true">{t('tenants.active')}</option>
-          <option value="false">{t('tenants.inactive')}</option>
-        </select>
+      <div className="bg-white rounded-lg shadow p-3 mb-4 flex gap-2 overflow-x-auto">
+        {(
+          [
+            ['ALL', `All (${total})`],
+            ['INDIVIDUAL', t('tenants.individual')],
+            ['COMPANY', t('tenants.company')],
+            ['ACTIVE', t('tenants.active')],
+            ['INACTIVE', t('tenants.inactive')],
+          ] as [QuickFilter, string][]
+        ).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setQuickFilter(key)}
+            className={`shrink-0 rounded px-4 py-2 text-sm font-medium ${
+              quickFilter === key ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-gray-600 text-left">
             <tr>
+              <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">{t('tenants.name')}</th>
               <th className="px-4 py-3">{t('tenants.type')}</th>
               <th className="px-4 py-3">{t('tenants.nationality')}</th>
               <th className="px-4 py-3">{t('tenants.mobile')}</th>
-              <th className="px-4 py-3">{t('tenants.email')}</th>
+              <th className="px-4 py-3">{t('tenants.civilId')}</th>
               <th className="px-4 py-3">{t('tenants.status')}</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
           <tbody>
-            {items.map((tenant) => (
+            {visibleItems.map((tenant) => (
               <tr key={tenant.id} className="border-t">
+                <td className="px-4 py-3 text-gray-500">T-{tenant.id.slice(0, 6).toUpperCase()}</td>
                 <td className="px-4 py-3">
-                  {tenant.tenantType === 'COMPANY'
-                    ? tenant.companyName
-                    : `${tenant.firstName ?? ''} ${tenant.lastName ?? ''}`}
+                  <div className="font-medium text-gray-800">
+                    {tenant.tenantType === 'COMPANY'
+                      ? tenant.companyName
+                      : `${tenant.firstName ?? ''} ${tenant.lastName ?? ''}`}
+                  </div>
+                  <div className="text-xs text-gray-500">{tenant.email}</div>
                 </td>
-                <td className="px-4 py-3">{tenant.tenantType}</td>
-                <td className="px-4 py-3">{tenant.nationality}</td>
-                <td className="px-4 py-3">{tenant.mobile}</td>
-                <td className="px-4 py-3">{tenant.email}</td>
                 <td className="px-4 py-3">
                   <span
-                    className={`text-xs px-2 py-0.5 rounded border ${
-                      tenant.isActive ? 'bg-success/10 text-success border-success/30' : 'bg-gray-100 text-gray-500 border-gray-300'
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      tenant.tenantType === 'COMPANY' ? 'bg-info/15 text-info' : 'bg-primary/10 text-primary'
+                    }`}
+                  >
+                    {tenant.tenantType === 'COMPANY' ? t('tenants.company') : t('tenants.individual')}
+                  </span>
+                </td>
+                <td className="px-4 py-3">{tenant.nationality}</td>
+                <td className="px-4 py-3">{tenant.mobile}</td>
+                <td className="px-4 py-3">{tenant.civilId ?? tenant.passportNumber ?? '—'}</td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      tenant.isActive ? 'bg-success/15 text-success' : 'bg-gray-100 text-gray-500'
                     }`}
                   >
                     {tenant.isActive ? t('tenants.active') : t('tenants.inactive')}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-right whitespace-nowrap space-x-2">
                   <button onClick={() => openEdit(tenant)} className="text-primary text-sm font-medium">
                     {t('tenants.edit')}
                   </button>
                 </td>
               </tr>
             ))}
-            {items.length === 0 && (
+            {visibleItems.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
                   {t('tenants.none')}
                 </td>
               </tr>

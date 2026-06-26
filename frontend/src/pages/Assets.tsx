@@ -4,10 +4,10 @@ import { Asset, AssetStatus, createAsset, listAssets, Trade, updateAsset } from 
 import { listBuildings, Building } from '../api/properties';
 
 const STATUS_COLORS: Record<AssetStatus, string> = {
-  GOOD: 'bg-success/10 text-success border-success/30',
-  SERVICE_DUE: 'bg-warning/10 text-warning border-warning/30',
-  OVERDUE: 'bg-danger/10 text-danger border-danger/30',
-  OUT_OF_SERVICE: 'bg-gray-100 text-gray-600 border-gray-300',
+  GOOD: 'bg-success/15 text-success',
+  SERVICE_DUE: 'bg-warning/15 text-warning',
+  OVERDUE: 'bg-danger/15 text-danger',
+  OUT_OF_SERVICE: 'bg-gray-100 text-gray-600',
 };
 
 const TRADES: Trade[] = ['ELECTRICAL', 'PLUMBING', 'CARPENTRY', 'MASONRY', 'CLEANING', 'OTHER'];
@@ -108,9 +108,11 @@ export function Assets() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-gray-600 text-left">
             <tr>
+              <th className="px-4 py-3">Asset ID</th>
               <th className="px-4 py-3">{t('assets.name')}</th>
               <th className="px-4 py-3">{t('assets.category')}</th>
-              <th className="px-4 py-3">{t('assets.location')}</th>
+              <th className="px-4 py-3">Building / Unit</th>
+              <th className="px-4 py-3">{t('assets.purchaseDate')}</th>
               <th className="px-4 py-3">{t('assets.warrantyExpiry')}</th>
               <th className="px-4 py-3">{t('assets.nextServiceDate')}</th>
               <th className="px-4 py-3">{t('assets.status')}</th>
@@ -120,9 +122,15 @@ export function Assets() {
           <tbody>
             {items.map((asset) => (
               <tr key={asset.id} className="border-t">
+                <td className="px-4 py-3 text-gray-500">AST-{asset.id.slice(0, 6).toUpperCase()}</td>
                 <td className="px-4 py-3 font-medium">{asset.name}</td>
                 <td className="px-4 py-3">{t(`maintenance.trades.${asset.category}`)}</td>
-                <td className="px-4 py-3">{asset.location}</td>
+                <td className="px-4 py-3">
+                  {asset.building?.nameEn ?? '—'}-{asset.location}
+                </td>
+                <td className="px-4 py-3">
+                  {asset.purchaseDate ? new Date(asset.purchaseDate).toLocaleDateString() : '-'}
+                </td>
                 <td className="px-4 py-3">
                   {asset.warrantyExpiry ? new Date(asset.warrantyExpiry).toLocaleDateString() : '-'}
                 </td>
@@ -130,7 +138,7 @@ export function Assets() {
                   {asset.nextServiceDate ? new Date(asset.nextServiceDate).toLocaleDateString() : '-'}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded border ${STATUS_COLORS[asset.status]}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[asset.status]}`}>
                     {t(`assets.statuses.${asset.status}`)}
                   </span>
                 </td>
@@ -143,7 +151,7 @@ export function Assets() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={9} className="px-4 py-6 text-center text-gray-500">
                   {t('assets.none')}
                 </td>
               </tr>

@@ -18,14 +18,14 @@ const CATEGORIES: PettyCashCategory[] = ['MAINTENANCE', 'SUPPLIES', 'UTILITIES',
 const STATUSES: PettyCashStatus[] = ['PENDING', 'APPROVED', 'REJECTED'];
 
 const STATUS_COLORS: Record<PettyCashStatus, string> = {
-  PENDING: 'bg-gray-100 text-gray-600 border-gray-300',
-  APPROVED: 'bg-success/10 text-success border-success/30',
-  REJECTED: 'bg-danger/10 text-danger border-danger/30',
+  PENDING: 'bg-gray-100 text-gray-600',
+  APPROVED: 'bg-success/15 text-success',
+  REJECTED: 'bg-danger/15 text-danger',
 };
 
 const TYPE_COLORS: Record<PettyCashType, string> = {
-  REPLENISHMENT: 'bg-info/10 text-info border-info/30',
-  EXPENSE: 'bg-warning/10 text-warning border-warning/30',
+  REPLENISHMENT: 'bg-info/15 text-info',
+  EXPENSE: 'bg-warning/15 text-warning',
 };
 
 const EMPTY_FORM = {
@@ -69,8 +69,8 @@ export function PettyCash() {
     listBuildings().then(setBuildings);
   }, [typeFilter, categoryFilter, statusFilter]);
 
-  function openModal() {
-    setForm(EMPTY_FORM);
+  function openModal(type: PettyCashType = 'EXPENSE') {
+    setForm({ ...EMPTY_FORM, type });
     setError('');
     setModalOpen(true);
   }
@@ -114,21 +114,28 @@ export function PettyCash() {
           <h1 className="text-2xl font-semibold text-primary">{t('pettyCash.title')}</h1>
           <p className="text-sm text-gray-500 mt-0.5">{t('pettyCash.subtitle')}</p>
         </div>
-        <button onClick={openModal} className="bg-primary text-white rounded px-4 py-2 text-sm font-medium">
-          {t('pettyCash.add')}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => openModal('REPLENISHMENT')}
+            className="bg-gray-100 text-gray-700 rounded px-4 py-2 text-sm font-medium"
+          >
+            Top Up Request
+          </button>
+          <button onClick={() => openModal('EXPENSE')} className="bg-primary text-white rounded px-4 py-2 text-sm font-medium">
+            {t('pettyCash.add')}
+          </button>
+        </div>
       </div>
 
       {summary && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <SummaryCard label={t('pettyCash.monthlyLimit')} value={summary.monthlyLimit} />
-          <SummaryCard label={t('pettyCash.replenished')} value={summary.replenished} color="text-info" />
-          <SummaryCard label={t('pettyCash.spent')} value={summary.spent} color="text-warning" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
           <SummaryCard
             label={t('pettyCash.remaining')}
             value={summary.remaining}
             color={summary.remaining < 0 ? 'text-danger' : 'text-success'}
           />
+          <SummaryCard label={t('pettyCash.spent')} value={summary.spent} color="text-warning" />
+          <SummaryCard label={t('pettyCash.monthlyLimit')} value={summary.monthlyLimit} />
         </div>
       )}
 
@@ -184,6 +191,8 @@ export function PettyCash() {
               <th className="px-4 py-3">{t('pettyCash.building')}</th>
               <th className="px-4 py-3">{t('pettyCash.amount')}</th>
               <th className="px-4 py-3">{t('pettyCash.status')}</th>
+              <th className="px-4 py-3">By</th>
+              <th className="px-4 py-3">Receipt</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
@@ -192,7 +201,7 @@ export function PettyCash() {
               <tr key={tx.id} className="border-t">
                 <td className="px-4 py-3 whitespace-nowrap">{new Date(tx.occurredAt).toLocaleDateString()}</td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded border ${TYPE_COLORS[tx.type]}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${TYPE_COLORS[tx.type]}`}>
                     {t(`pettyCash.types.${tx.type}`)}
                   </span>
                 </td>
@@ -201,9 +210,17 @@ export function PettyCash() {
                 <td className="px-4 py-3">{tx.building?.nameEn ?? '-'}</td>
                 <td className="px-4 py-3 font-medium">{tx.amount} KWD</td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded border ${STATUS_COLORS[tx.status]}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[tx.status]}`}>
                     {t(`pettyCash.statuses.${tx.status}`)}
                   </span>
+                </td>
+                <td className="px-4 py-3">{tx.requestedBy}</td>
+                <td className="px-4 py-3">
+                  {tx.receiptUrl ? (
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-success/15 text-success">✓</span>
+                  ) : (
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-warning/15 text-warning">Missing</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-right whitespace-nowrap space-x-2">
                   {tx.status === 'PENDING' && (
@@ -227,7 +244,7 @@ export function PettyCash() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={10} className="px-4 py-6 text-center text-gray-500">
                   {t('pettyCash.none')}
                 </td>
               </tr>

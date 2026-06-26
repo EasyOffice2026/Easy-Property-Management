@@ -16,12 +16,12 @@ import { listTenants, Tenant } from '../api/tenants';
 import { RentPeriod } from '../api/inquiries';
 
 const STATUS_COLORS: Record<ContractStatus, string> = {
-  DRAFT: 'bg-gray-100 text-gray-600 border-gray-300',
-  ACTIVE: 'bg-success/10 text-success border-success/30',
-  EXPIRING: 'bg-warning/10 text-warning border-warning/30',
-  EXPIRED: 'bg-danger/10 text-danger border-danger/30',
-  TERMINATED: 'bg-danger/10 text-danger border-danger/30',
-  CLEARED: 'bg-info/10 text-info border-info/30',
+  DRAFT: 'bg-gray-100 text-gray-600',
+  ACTIVE: 'bg-success/15 text-success',
+  EXPIRING: 'bg-warning/15 text-warning',
+  EXPIRED: 'bg-danger/15 text-danger',
+  TERMINATED: 'bg-danger/15 text-danger',
+  CLEARED: 'bg-info/15 text-info',
 };
 
 const EMPTY_FORM = {
@@ -38,6 +38,7 @@ const EMPTY_FORM = {
 export function Contracts() {
   const { t } = useTranslation();
   const [items, setItems] = useState<Contract[]>([]);
+  const [allItems, setAllItems] = useState<Contract[]>([]);
   const [statusFilter, setStatusFilter] = useState<ContractStatus | ''>('');
   const [periodFilter, setPeriodFilter] = useState<RentPeriod | ''>('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -54,6 +55,8 @@ export function Contracts() {
       pageSize: 100,
     });
     setItems(result.items);
+    const all = await listContracts({ pageSize: 1000 });
+    setAllItems(all.items);
   }
 
   useEffect(() => {
@@ -107,31 +110,47 @@ export function Contracts() {
 
       {actionError && <p className="text-danger text-sm mb-3">{actionError}</p>}
 
-      <div className="flex gap-3 mb-4">
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as ContractStatus | '')}
-          className="border rounded px-3 py-2 bg-white text-sm"
-        >
-          <option value="">{t('tenants.allStatuses')}</option>
-          {(['DRAFT', 'ACTIVE', 'EXPIRING', 'EXPIRED', 'TERMINATED', 'CLEARED'] as ContractStatus[]).map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        <select
-          value={periodFilter}
-          onChange={(e) => setPeriodFilter(e.target.value as RentPeriod | '')}
-          className="border rounded px-3 py-2 bg-white text-sm"
-        >
-          <option value="">{t('contracts.allPeriods')}</option>
-          {(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'] as RentPeriod[]).map((p) => (
-            <option key={p} value={p}>
-              {p}
-            </option>
-          ))}
-        </select>
+      <div className="bg-white rounded-lg shadow p-3 mb-4 flex flex-wrap gap-2">
+        {(
+          [
+            ['', `${t('tenants.allStatuses')} (${allItems.length})`],
+            ['ACTIVE', `Active (${allItems.filter((c) => c.status === 'ACTIVE').length})`],
+            ['EXPIRING', `Expiring Soon (${allItems.filter((c) => c.status === 'EXPIRING').length})`],
+            ['EXPIRED', `Expired (${allItems.filter((c) => c.status === 'EXPIRED').length})`],
+          ] as [ContractStatus | '', string][]
+        ).map(([key, label]) => (
+          <button
+            key={key || 'all'}
+            onClick={() => setStatusFilter(key)}
+            className={`shrink-0 rounded px-4 py-2 text-sm font-medium ${
+              statusFilter === key ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-3 mb-4 flex flex-wrap gap-2">
+        {(
+          [
+            ['', t('contracts.allPeriods')],
+            ['DAILY', 'Daily'],
+            ['WEEKLY', 'Weekly'],
+            ['MONTHLY', 'Monthly'],
+            ['YEARLY', 'Yearly'],
+          ] as [RentPeriod | '', string][]
+        ).map(([key, label]) => (
+          <button
+            key={key || 'all-periods'}
+            onClick={() => setPeriodFilter(key)}
+            className={`shrink-0 rounded px-4 py-2 text-sm font-medium ${
+              periodFilter === key ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden overflow-x-auto">
@@ -145,6 +164,7 @@ export function Contracts() {
               <th className="px-4 py-3">{t('contracts.rent')}</th>
               <th className="px-4 py-3">{t('contracts.dates')}</th>
               <th className="px-4 py-3">{t('tenants.status')}</th>
+              <th className="px-4 py-3">Lock</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
@@ -165,9 +185,12 @@ export function Contracts() {
                   {new Date(contract.endDate).toLocaleDateString()}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded border ${STATUS_COLORS[contract.status]}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[contract.status]}`}>
                     {contract.status}
                   </span>
+                </td>
+                <td className="px-4 py-3 text-xs">
+                  {contract.status === 'ACTIVE' || contract.status === 'EXPIRING' ? '🔒 Locked' : '—'}
                 </td>
                 <td className="px-4 py-3 text-right whitespace-nowrap space-x-2">
                   {contract.status === 'DRAFT' && (
@@ -213,7 +236,7 @@ export function Contracts() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={9} className="px-4 py-6 text-center text-gray-500">
                   {t('contracts.none')}
                 </td>
               </tr>
