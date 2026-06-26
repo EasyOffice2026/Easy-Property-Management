@@ -91,10 +91,17 @@ export function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-sm font-medium text-gray-700 mb-4">Monthly Revenue (KWD)</h2>
+          <RevenueChart data={kpis.monthlyRevenue} />
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-sm font-medium text-gray-700 mb-4">{t('dashboard.unitsByStatus')}</h2>
           <UnitsDonut unitsByStatus={kpis.unitsByStatus} occupancyRate={kpis.occupancyRate} />
         </div>
+      </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-sm font-medium text-gray-700">{t('contracts.add')}</h2>
@@ -133,9 +140,7 @@ export function Dashboard() {
             </tbody>
           </table>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-sm font-medium text-gray-700 mb-4">{t('nav.maintenance')}</h2>
           <div className="space-y-3">
@@ -278,6 +283,50 @@ function UnitsDonut({
             />
             <span className="text-gray-600">{status}</span>
             <span className="font-medium text-gray-800">({count})</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RevenueChart({ data }: { data: { month: string; revenue: number }[] }) {
+  if (data.length === 0) {
+    return <p className="text-sm text-gray-500">-</p>;
+  }
+
+  const max = Math.max(...data.map((d) => d.revenue), 1);
+  const lastIndex = data.length - 1;
+  const yoyDelta =
+    data.length > 1 && data[0].revenue > 0
+      ? Math.round(((data[lastIndex].revenue - data[0].revenue) / data[0].revenue) * 100)
+      : null;
+
+  return (
+    <div>
+      {yoyDelta !== null && (
+        <div className="flex justify-end mb-2">
+          <span
+            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+              yoyDelta >= 0 ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger'
+            }`}
+          >
+            {yoyDelta >= 0 ? '+' : ''}
+            {yoyDelta}%
+          </span>
+        </div>
+      )}
+      <div className="flex items-end gap-3 h-40">
+        {data.map((d, i) => (
+          <div key={d.month} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+            <span className="text-xs text-gray-500">{d.revenue.toFixed(1)}</span>
+            <div
+              className={`w-full rounded-t ${i === lastIndex ? 'bg-gold' : 'bg-primary'}`}
+              style={{ height: `${Math.max((d.revenue / max) * 100, 4)}%` }}
+            />
+            <span className="text-xs text-gray-400 mt-1">
+              {new Date(`${d.month}-01`).toLocaleDateString(undefined, { month: 'short' })}
+            </span>
           </div>
         ))}
       </div>

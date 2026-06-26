@@ -8,6 +8,11 @@ export interface ExpiringContract {
   unit: { unitNumber: string };
 }
 
+export interface MonthlyRevenuePoint {
+  month: string;
+  revenue: number;
+}
+
 export interface DashboardKpis {
   buildingCount: number;
   totalUnits: number;
@@ -17,6 +22,7 @@ export interface DashboardKpis {
   activeContractCount: number;
   expiringContracts: ExpiringContract[];
   openWorkOrders: { EMERGENCY: number; HIGH: number; ROUTINE: number };
+  monthlyRevenue: MonthlyRevenuePoint[];
 }
 
 export async function getDashboardKpis() {
