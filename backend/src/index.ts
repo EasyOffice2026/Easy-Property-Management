@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import authRoutes from './modules/auth/routes';
 import propertiesRoutes from './modules/properties/routes';
 import usersRoutes from './modules/users/routes';
@@ -35,7 +36,15 @@ app.use('/api/v1/dashboard', dashboardRoutes);
 app.use('/api/v1/accounting', accountingRoutes);
 app.use('/api/v1/settings', settingsRoutes);
 
-app.use(notFoundHandler);
+const frontendDist = path.join(__dirname, '..', '..', 'frontend', 'dist');
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(frontendDist));
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+} else {
+  app.use(notFoundHandler);
+}
 app.use(errorHandler);
 
 const port = process.env.PORT ?? 3001;
