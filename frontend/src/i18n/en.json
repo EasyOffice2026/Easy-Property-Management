@@ -199,5 +199,168 @@
       "OVERDUE": "Overdue",
       "OUT_OF_SERVICE": "Out of Service"
     }
+  },
+  "accounting": {
+    "subtitle": "Financial overview & reporting",
+    "tabs": {
+      "revenue": "Revenue",
+      "expenses": "Expenses",
+      "invoices": "Invoices",
+      "bank": "Bank Reconciliation",
+      "pl": "P&L",
+      "bs": "Balance Sheet",
+      "cf": "Cash Flow",
+      "proj": "Projections"
+    },
+    "kpi": {
+      "revenue": "Total Revenue",
+      "expenses": "Total Expenses",
+      "netProfit": "Net Profit",
+      "receivables": "Outstanding Receivables",
+      "payables": "Outstanding Payables"
+    },
+    "date": "Date",
+    "description": "Description",
+    "amount": "Amount",
+    "payment": "Payment Method",
+    "category": "Category",
+    "vendor": "Vendor",
+    "noEntries": "No entries found.",
+    "invoiceNo": "Invoice #",
+    "dueDate": "Due Date",
+    "bankName": "National Bank of Kuwait (NBK)",
+    "statementPeriod": "Current Month Statement",
+    "importStatement": "Import Statement",
+    "bankBalance": "Bank Balance",
+    "systemBalance": "System Balance",
+    "difference": "Difference",
+    "bankAmount": "Bank Amount",
+    "systemMatch": "System Match",
+    "plTitle": "Profit & Loss Statement",
+    "revenue": "Revenue",
+    "totalRevenue": "Total Revenue",
+    "expensesLabel": "Expenses",
+    "totalExpenses": "Total Expenses",
+    "netProfit": "Net Profit",
+    "bsTitle": "Balance Sheet",
+    "assets": "Assets",
+    "totalAssets": "Total Assets",
+    "liabilitiesEquity": "Liabilities & Equity",
+    "totalLiabilitiesEquity": "Total Liabilities & Equity",
+    "cfTitle": "Cash Flow Statement",
+    "operatingActivities": "Operating Activities",
+    "investingActivities": "Investing Activities",
+    "financingActivities": "Financing Activities",
+    "netCashIncrease": "Net Cash Increase",
+    "projTitle": "6-Month Financial Projections",
+    "month": "Month",
+    "projectedOccupancy": "Occupancy %",
+    "projectedRevenue": "Revenue",
+    "projectedExpenses": "Expenses",
+    "projectedProfit": "Net Profit"
+  },
+  "reports": {
+    "subtitle": "Generate & view reports across all modules",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "thisQuarter": "This Quarter",
+    "thisYear": "This Year",
+    "lastGenerated": "Last generated",
+    "today": "Today",
+    "view": "View →",
+    "cards": {
+      "occupancyReport": {
+        "title": "Occupancy Report",
+        "desc": "Building-wise unit occupancy rates, vacancy trends, and availability calendar."
+      },
+      "revenueSummary": {
+        "title": "Revenue Summary",
+        "desc": "Monthly and quarterly revenue from rental contracts by building and unit type."
+      },
+      "expenseBreakdown": {
+        "title": "Expense Breakdown",
+        "desc": "Category-wise expense analysis with vendor-level details and trends."
+      },
+      "profitLoss": {
+        "title": "Profit & Loss",
+        "desc": "Income vs. expenses with net profit margins and period comparisons."
+      },
+      "contractExpiry": {
+        "title": "Contract Expiry Report",
+        "desc": "Upcoming contract expirations with renewal recommendations and tenant status."
+      },
+      "maintenanceLog": {
+        "title": "Maintenance Log",
+        "desc": "Work order history with trade analysis, completion rates, and cost tracking."
+      },
+      "tenantDirectory": {
+        "title": "Tenant Directory",
+        "desc": "Complete tenant listing with contact info, KYC status, and document vault."
+      },
+      "pettyCashReport": {
+        "title": "Petty Cash Report",
+        "desc": "Monthly petty cash usage, approval rates, and category breakdown."
+      },
+      "balanceSheet": {
+        "title": "Balance Sheet",
+        "desc": "Assets, liabilities, and equity snapshot with period comparisons."
+      }
+    }
+  },
+  "users": {
+    "subtitle": "Manage system users and access roles",
+    "add": "Add User",
+    "editUser": "Edit User",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "status": "Status",
+    "created": "Created",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "deactivate": "Deactivate",
+    "activate": "Activate",
+    "save": "Save",
+    "cancel": "Cancel",
+    "none": "No users found.",
+    "allRoles": "All Roles",
+    "searchPlaceholder": "Search by name or email...",
+    "totalUsers": "Total Users",
+    "activeUsers": "Active Users",
+    "admins": "Admins",
+    "agents": "Leasing Agents",
+    "loadError": "Failed to load users",
+    "saveFailed": "Failed to save user",
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "PROPERTY_MANAGER": "Property Manager",
+      "LEASING_AGENT": "Leasing Agent",
+      "MAINTENANCE_SUPERVISOR": "Maintenance Supervisor",
+      "ACCOUNTANT": "Accountant",
+      "VIEWER": "Viewer"
+    }
+  },
+  "settings": {
+    "subtitle": "Application configuration & preferences",
+    "companyInfo": "Company Information",
+    "contractSettings": "Contract Settings",
+    "companyName": "Company Name",
+    "country": "Country",
+    "currency": "Currency",
+    "defaultLanguage": "Default Language",
+    "contractPrefix": "Contract Number Prefix",
+    "contractPrefixHint": "e.g. EPM → contracts will be EPM-2026-0001",
+    "expiryWarningDays": "Expiry Warning Days",
+    "overdueGraceDays": "Overdue Grace Period (Days)",
+    "autoLockOnSigning": "Auto-lock apartment on contract signing",
+    "autoLockHint": "When enabled, signing a contract automatically marks the unit as Occupied.",
+    "save": "Save Settings",
+    "saving": "Saving...",
+    "saved": "Settings saved successfully!",
+    "saveFailed": "Failed to save settings.",
+    "loading": "Loading settings...",
+    "loadError": "Failed to load settings."
   }
 }

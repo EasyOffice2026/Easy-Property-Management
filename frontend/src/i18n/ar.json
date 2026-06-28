@@ -199,5 +199,168 @@
       "OVERDUE": "متأخر",
       "OUT_OF_SERVICE": "خارج الخدمة"
     }
+  },
+  "accounting": {
+    "subtitle": "نظرة عامة مالية وتقارير",
+    "tabs": {
+      "revenue": "الإيرادات",
+      "expenses": "المصروفات",
+      "invoices": "الفواتير",
+      "bank": "تسوية بنكية",
+      "pl": "الأرباح والخسائر",
+      "bs": "الميزانية العمومية",
+      "cf": "التدفق النقدي",
+      "proj": "التوقعات"
+    },
+    "kpi": {
+      "revenue": "إجمالي الإيرادات",
+      "expenses": "إجمالي المصروفات",
+      "netProfit": "صافي الربح",
+      "receivables": "المستحقات",
+      "payables": "الالتزامات"
+    },
+    "date": "التاريخ",
+    "description": "الوصف",
+    "amount": "المبلغ",
+    "payment": "طريقة الدفع",
+    "category": "الفئة",
+    "vendor": "المورد",
+    "noEntries": "لا توجد سجلات.",
+    "invoiceNo": "رقم الفاتورة",
+    "dueDate": "تاريخ الاستحقاق",
+    "bankName": "بنك الكويت الوطني (NBK)",
+    "statementPeriod": "كشف الشهر الحالي",
+    "importStatement": "استيراد كشف",
+    "bankBalance": "رصيد البنك",
+    "systemBalance": "رصيد النظام",
+    "difference": "الفرق",
+    "bankAmount": "مبلغ البنك",
+    "systemMatch": "مطابقة النظام",
+    "plTitle": "بيان الأرباح والخسائر",
+    "revenue": "الإيرادات",
+    "totalRevenue": "إجمالي الإيرادات",
+    "expensesLabel": "المصروفات",
+    "totalExpenses": "إجمالي المصروفات",
+    "netProfit": "صافي الربح",
+    "bsTitle": "الميزانية العمومية",
+    "assets": "الأصول",
+    "totalAssets": "إجمالي الأصول",
+    "liabilitiesEquity": "الالتزامات وحقوق الملكية",
+    "totalLiabilitiesEquity": "إجمالي الالتزامات وحقوق الملكية",
+    "cfTitle": "بيان التدفق النقدي",
+    "operatingActivities": "الأنشطة التشغيلية",
+    "investingActivities": "الأنشطة الاستثمارية",
+    "financingActivities": "الأنشطة التمويلية",
+    "netCashIncrease": "صافي الزيادة النقدية",
+    "projTitle": "التوقعات المالية لستة أشهر",
+    "month": "الشهر",
+    "projectedOccupancy": "نسبة الإشغال",
+    "projectedRevenue": "الإيرادات",
+    "projectedExpenses": "المصروفات",
+    "projectedProfit": "صافي الربح"
+  },
+  "reports": {
+    "subtitle": "إنشاء وعرض التقارير لجميع الأقسام",
+    "thisMonth": "هذا الشهر",
+    "lastMonth": "الشهر الماضي",
+    "thisQuarter": "هذا الربع",
+    "thisYear": "هذا العام",
+    "lastGenerated": "آخر إنشاء",
+    "today": "اليوم",
+    "view": "عرض ←",
+    "cards": {
+      "occupancyReport": {
+        "title": "تقرير الإشغال",
+        "desc": "معدلات إشغال الوحدات حسب المبنى واتجاهات الشواغر وتقويم التوفر."
+      },
+      "revenueSummary": {
+        "title": "ملخص الإيرادات",
+        "desc": "إيرادات شهرية وربع سنوية من عقود الإيجار حسب المبنى ونوع الوحدة."
+      },
+      "expenseBreakdown": {
+        "title": "تفصيل المصروفات",
+        "desc": "تحليل المصروفات حسب الفئة مع تفاصيل الموردين والاتجاهات."
+      },
+      "profitLoss": {
+        "title": "الأرباح والخسائر",
+        "desc": "الإيرادات مقابل المصروفات مع هوامش الربح الصافي ومقارنات الفترات."
+      },
+      "contractExpiry": {
+        "title": "تقرير انتهاء العقود",
+        "desc": "العقود المنتهية القادمة مع توصيات التجديد وحالة المستأجر."
+      },
+      "maintenanceLog": {
+        "title": "سجل الصيانة",
+        "desc": "تاريخ أوامر العمل مع تحليل التخصصات ومعدلات الإنجاز وتتبع التكاليف."
+      },
+      "tenantDirectory": {
+        "title": "دليل المستأجرين",
+        "desc": "قائمة كاملة بالمستأجرين مع معلومات الاتصال وحالة KYC وخزنة الوثائق."
+      },
+      "pettyCashReport": {
+        "title": "تقرير النقدية الصغيرة",
+        "desc": "استخدام النقدية الصغيرة الشهري ومعدلات الموافقة وتفصيل الفئات."
+      },
+      "balanceSheet": {
+        "title": "الميزانية العمومية",
+        "desc": "لقطة الأصول والالتزامات وحقوق الملكية مع مقارنات الفترات."
+      }
+    }
+  },
+  "users": {
+    "subtitle": "إدارة مستخدمي النظام وصلاحيات الوصول",
+    "add": "إضافة مستخدم",
+    "editUser": "تعديل المستخدم",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "role": "الدور",
+    "status": "الحالة",
+    "created": "تاريخ الإنشاء",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "edit": "تعديل",
+    "deactivate": "إلغاء التفعيل",
+    "activate": "تفعيل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "none": "لا يوجد مستخدمون.",
+    "allRoles": "كل الأدوار",
+    "searchPlaceholder": "بحث بالاسم أو البريد الإلكتروني...",
+    "totalUsers": "إجمالي المستخدمين",
+    "activeUsers": "المستخدمون النشطون",
+    "admins": "المسؤولون",
+    "agents": "وكلاء التأجير",
+    "loadError": "فشل تحميل المستخدمين",
+    "saveFailed": "فشل حفظ المستخدم",
+    "roles": {
+      "SUPER_ADMIN": "مسؤول أعلى",
+      "PROPERTY_MANAGER": "مدير عقارات",
+      "LEASING_AGENT": "وكيل تأجير",
+      "MAINTENANCE_SUPERVISOR": "مشرف صيانة",
+      "ACCOUNTANT": "محاسب",
+      "VIEWER": "مشاهد"
+    }
+  },
+  "settings": {
+    "subtitle": "تكوين التطبيق والتفضيلات",
+    "companyInfo": "معلومات الشركة",
+    "contractSettings": "إعدادات العقود",
+    "companyName": "اسم الشركة",
+    "country": "الدولة",
+    "currency": "العملة",
+    "defaultLanguage": "اللغة الافتراضية",
+    "contractPrefix": "بادئة رقم العقد",
+    "contractPrefixHint": "مثال: EPM ← العقود ستكون EPM-2026-0001",
+    "expiryWarningDays": "أيام تحذير الانتهاء",
+    "overdueGraceDays": "فترة السماح للتأخير (أيام)",
+    "autoLockOnSigning": "قفل الشقة تلقائياً عند توقيع العقد",
+    "autoLockHint": "عند التفعيل، يؤدي توقيع العقد تلقائياً إلى تغيير حالة الوحدة إلى مشغولة.",
+    "save": "حفظ الإعدادات",
+    "saving": "جاري الحفظ...",
+    "saved": "تم حفظ الإعدادات بنجاح!",
+    "saveFailed": "فشل حفظ الإعدادات.",
+    "loading": "جاري تحميل الإعدادات...",
+    "loadError": "فشل تحميل الإعدادات."
   }
 }

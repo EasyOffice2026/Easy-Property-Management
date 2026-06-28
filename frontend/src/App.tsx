@@ -10,7 +10,10 @@ import { Contracts } from './pages/Contracts';
 import { WorkOrders } from './pages/WorkOrders';
 import { Assets } from './pages/Assets';
 import { PettyCash } from './pages/PettyCash';
-import { Placeholder } from './pages/Placeholder';
+import { Accounting } from './pages/Accounting';
+import { Reports } from './pages/Reports';
+import { Users } from './pages/Users';
+import { Settings } from './pages/Settings';
 
 export function App() {
   return (
@@ -32,11 +35,11 @@ export function App() {
         <Route path="contracts" element={<Contracts />} />
         <Route path="maintenance" element={<WorkOrders />} />
         <Route path="assets" element={<Assets />} />
-        <Route path="accounting" element={<Placeholder title="Accounting" />} />
+        <Route path="accounting" element={<Accounting />} />
         <Route path="petty-cash" element={<PettyCash />} />
-        <Route path="reports" element={<Placeholder title="Reports" />} />
-        <Route path="users" element={<Placeholder title="Users" />} />
-        <Route path="settings" element={<Placeholder title="Settings" />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="users" element={<Users />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

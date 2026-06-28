@@ -10,6 +10,8 @@ import contractsRoutes from './modules/contracts/routes';
 import maintenanceRoutes from './modules/maintenance/routes';
 import pettyCashRoutes from './modules/pettycash/routes';
 import dashboardRoutes from './modules/dashboard/routes';
+import accountingRoutes from './modules/accounting/routes';
+import settingsRoutes from './modules/settings/routes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { UPLOAD_ROOT } from './utils/fileStorage';
 
@@ -30,6 +32,8 @@ app.use('/api/v1/contracts', contractsRoutes);
 app.use('/api/v1', maintenanceRoutes);
 app.use('/api/v1/petty-cash', pettyCashRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
+app.use('/api/v1/accounting', accountingRoutes);
+app.use('/api/v1/settings', settingsRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
