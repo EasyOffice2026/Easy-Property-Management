@@ -2,31 +2,32 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// One-time cleanup: remove duplicate/orphan buildings that have no units.
-// These were created by non-idempotent seed runs on earlier deploys.
+// One-time reset: earlier non-idempotent seed runs created duplicate demo data
+// (buildings, units, tenants). This wipes all demo data (keeping users) so the
+// idempotent seed can repopulate a single clean set. Guarded by RUN_RESET so it
+// only executes when explicitly enabled.
 async function main() {
-  const buildings = await prisma.building.findMany({
-    include: { _count: { select: { units: true } } },
-    orderBy: { createdAt: 'asc' },
-  });
-
-  const withUnits = buildings.filter((b) => b._count.units > 0);
-  const withoutUnits = buildings.filter((b) => b._count.units === 0);
-
-  // Keep the first building that has units; if none have units, keep the oldest.
-  const keepId = withUnits.length > 0 ? withUnits[0].id : buildings[0]?.id;
-
-  const toDelete = buildings.filter((b) => b.id !== keepId && b._count.units === 0);
-
-  for (const b of toDelete) {
-    await prisma.building.delete({ where: { id: b.id } });
-    console.log(`Deleted orphan building: ${b.nameEn} (${b.id})`);
+  if (process.env.RUN_RESET !== 'true') {
+    console.log('RUN_RESET not set, skipping reset.');
+    return;
   }
 
-  console.log(
-    `Cleanup done. Kept ${keepId}. Deleted ${toDelete.length} orphan buildings. ` +
-      `(${withUnits.length} with units, ${withoutUnits.length} without units before cleanup)`
-  );
+  await prisma.journalEntryLine.deleteMany({});
+  await prisma.journalEntry.deleteMany({});
+  await prisma.voucher.deleteMany({});
+  await prisma.bankTransaction.deleteMany({});
+  await prisma.account.deleteMany({});
+  await prisma.pettyCashTransaction.deleteMany({});
+  await prisma.workOrder.deleteMany({});
+  await prisma.contract.deleteMany({});
+  await prisma.inquiry.deleteMany({});
+  await prisma.document.deleteMany({});
+  await prisma.asset.deleteMany({});
+  await prisma.unit.deleteMany({});
+  await prisma.tenant.deleteMany({});
+  await prisma.building.deleteMany({});
+
+  console.log('Reset complete: all demo data cleared (users preserved).');
 }
 
 main()
