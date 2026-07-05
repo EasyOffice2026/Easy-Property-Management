@@ -18,6 +18,8 @@ model User {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   auditLogs    AuditLog[]
+  journalEntries JournalEntry[] @relation("JournalCreatedBy")
+  vouchers       Voucher[]      @relation("VoucherCreatedBy")
 }
 
 enum Role {
@@ -298,4 +300,116 @@ enum PettyCashStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+// ========================
+// ACCOUNTING MODULE
+// ========================
+
+model Account {
+  id            String      @id @default(uuid())
+  code          String      @unique
+  nameEn        String
+  nameAr        String
+  type          AccountType
+  parentId      String?
+  parent        Account?    @relation("AccountTree", fields: [parentId], references: [id])
+  children      Account[]   @relation("AccountTree")
+  isActive      Boolean     @default(true)
+  description   String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  journalLines  JournalEntryLine[]
+}
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+model JournalEntry {
+  id          String             @id @default(uuid())
+  entryNumber String             @unique
+  date        DateTime
+  description String
+  reference   String?
+  status      JournalStatus      @default(DRAFT)
+  totalAmount Decimal            @db.Decimal(10, 3)
+  createdById String
+  createdBy   User               @relation("JournalCreatedBy", fields: [createdById], references: [id])
+  voucherId   String?
+  voucher     Voucher?           @relation("VoucherJournal")
+  lines       JournalEntryLine[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+enum JournalStatus {
+  DRAFT
+  POSTED
+  VOID
+}
+
+model JournalEntryLine {
+  id             String       @id @default(uuid())
+  journalEntryId String
+  journalEntry   JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  accountId      String
+  account        Account      @relation(fields: [accountId], references: [id])
+  debit          Decimal      @default(0) @db.Decimal(10, 3)
+  credit         Decimal      @default(0) @db.Decimal(10, 3)
+  description    String?
+}
+
+model Voucher {
+  id            String        @id @default(uuid())
+  voucherNumber String        @unique
+  type          VoucherType
+  date          DateTime
+  partyName     String
+  description   String
+  amount        Decimal       @db.Decimal(10, 3)
+  paymentMethod String?
+  referenceNo   String?
+  status        VoucherStatus @default(DRAFT)
+  createdById   String
+  createdBy     User          @relation("VoucherCreatedBy", fields: [createdById], references: [id])
+  journalEntry  JournalEntry? @relation("VoucherJournal", fields: [journalEntryId], references: [id])
+  journalEntryId String?     @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum VoucherType {
+  RECEIPT
+  PAYMENT
+}
+
+enum VoucherStatus {
+  DRAFT
+  APPROVED
+  VOID
+}
+
+model BankTransaction {
+  id            String              @id @default(uuid())
+  date          DateTime
+  description   String
+  reference     String?
+  debit         Decimal             @default(0) @db.Decimal(10, 3)
+  credit        Decimal             @default(0) @db.Decimal(10, 3)
+  balance       Decimal             @db.Decimal(10, 3)
+  status        ReconciliationStatus @default(UNMATCHED)
+  matchedVoucherId String?
+  importBatch   String?
+  createdAt     DateTime            @default(now())
+}
+
+enum ReconciliationStatus {
+  MATCHED
+  UNMATCHED
+  EXCLUDED
 }

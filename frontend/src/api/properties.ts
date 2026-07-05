@@ -40,6 +40,16 @@ export async function listUnitsByBuilding(buildingId: string) {
   return data.data;
 }
 
+export async function createBuilding(payload: Omit<Building, 'id' | 'units'>) {
+  const { data } = await apiClient.post<{ success: boolean; data: Building }>('/buildings', payload);
+  return data.data;
+}
+
+export async function updateBuilding(id: string, payload: Partial<Omit<Building, 'id' | 'units'>>) {
+  const { data } = await apiClient.put<{ success: boolean; data: Building }>(`/buildings/${id}`, payload);
+  return data.data;
+}
+
 export async function listAvailableUnits() {
   const { data } = await apiClient.get<{ success: boolean; data: (Unit & { building: Building })[] }>(
     '/units/available'
