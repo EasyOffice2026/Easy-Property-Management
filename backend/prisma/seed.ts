@@ -28,6 +28,12 @@ async function main() {
     },
   });
 
+  const existingBuildings = await prisma.building.count();
+  if (existingBuildings > 0) {
+    console.log('Seed data already present, skipping demo data seeding.');
+    return;
+  }
+
   const building = await prisma.building.create({
     data: {
       nameEn: 'Salmiya Tower',
